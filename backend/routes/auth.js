@@ -48,7 +48,7 @@ router.post('/createuser', [
     }
 })
 
-// Authenticate a User using: POST "/api/auth/login". Does not require Authorization
+// ROUTE-2 : Authenticate a User using: POST "/api/auth/login". Does not require Authorization
 router.post('/login', [
     body('email', "Enter a valid email").isEmail(),
     body('passward', 'Passward can not be blank').exists(),

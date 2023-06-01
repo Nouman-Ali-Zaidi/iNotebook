@@ -1,95 +1,40 @@
 import React, { useState } from "react";
 
 import NoteContext from "./NoteContext";
+import { json } from "react-router-dom";
 
 const NoteState = (props) => {
-    const initialNotes = [
-        {
-            "_id": "6477764568153064a3170f505",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "About me",
-            "description": "My name is Hamza and i am 18 years old.",
-            "tag": "Personal",
-            "date": "2023-05-31T16:32:54.500Z",
-            "__v": 0
-        },
-        {
-            "_id": "647776dd81530564a3170f507",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "Hello",
-            "description": "My name is Hamza and I welcome you all in my village.",
-            "tag": "Personal",
-            "date": "2023-05-31T16:33:33.502Z",
-            "__v": 0
-        },
-        {
-            "_id": "6477773a81530464a3170f509",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "About Website",
-            "description": "iNotebook is an website that help to save your personal notes on cloud. Your notes can only be accessed by you and no one can see your note without your permission.",
-            "tag": "Business",
-            "date": "2023-05-31T16:35:06.265Z",
-            "__v": 0
-        },
-        {
-            "_id": "6477746dd8153064a3170f507",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "Hello",
-            "description": "My name is Hamza and I welcome you all in my village.",
-            "tag": "Personal",
-            "date": "2023-05-31T16:33:33.502Z",
-            "__v": 0
-        },
-        {
-            "_id": "6477773a8153064a31370f509",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "About Website",
-            "description": "iNotebook is an website that help to save your personal notes on cloud. Your notes can only be accessed by you and no one can see your note without your permission.",
-            "tag": "Business",
-            "date": "2023-05-31T16:35:06.265Z",
-            "__v": 0
-        },
-        {
-            "_id": "647776dd815303464a3170f507",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "Hello",
-            "description": "My name is Hamza and I welcome you all in my village.",
-            "tag": "Personal",
-            "date": "2023-05-31T16:33:33.502Z",
-            "__v": 0
-        },
-        {
-            "_id": "6477773a84153064a3170f509",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "About Website",
-            "description": "iNotebook is an website that help to save your personal notes on cloud. Your notes can only be accessed by you and no one can see your note without your permission.",
-            "tag": "Business",
-            "date": "2023-05-31T16:35:06.265Z",
-            "__v": 0
-        },
-        {
-            "_id": "647776dd8153064a63170f507",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "Hello",
-            "description": "My name is Hamza and I welcome you all in my village.",
-            "tag": "Personal",
-            "date": "2023-05-31T16:33:33.502Z",
-            "__v": 0
-        },
-        {
-            "_id": "6477773a81530764a3170f509",
-            "user": "647486f2388f3da0f50b3d49",
-            "title": "About Website",
-            "description": "iNotebook is an website that help to save your personal notes on cloud. Your notes can only be accessed by you and no one can see your note without your permission.",
-            "tag": "Business",
-            "date": "2023-05-31T16:35:06.265Z",
-            "__v": 0
-        },
-    ]
+    const host = "http://localhost:5000";
+    const initialNotes = [];
     const [notes, setNotes] = useState(initialNotes);
 
+    // Fetch all Notes
+    const fetchNotes = async () => {
+        // API Call
+        const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ3NDg2ZjIzODhmM2RhMGY1MGIzZDQ5In0sImlhdCI6MTY4NTM1ODQ4MX0.DpAd6fevtm5DYKtorIiu7AGxw0ZysCIvt_HRbDBKQu8"
+            }
+        });
+        const json = await response.json();
+        console.log(json);
+        setNotes(json);
+    }
+
     // Add a Note
-    const addNote = (title, description, tag) => {
+    const addNote = async (title, description, tag) => {
+        //  API Call
+        const response = await fetch(`${host}/api/notes/addnote`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ3NDg2ZjIzODhmM2RhMGY1MGIzZDQ5In0sImlhdCI6MTY4NTM1ODQ4MX0.DpAd6fevtm5DYKtorIiu7AGxw0ZysCIvt_HRbDBKQu8"
+            },
+            body: await JSON.stringify({ title, description, tag })
+        });
+        const json = await response.json();
         const note = {
             "_id": "6237773df0764354170f509",
             "user": "647486f2388f3da0f50b3d49",
@@ -102,18 +47,49 @@ const NoteState = (props) => {
         setNotes(notes.concat(note));
     }
 
-    // Delete a Note
-    const deleteNote = () => {
-
+    //************  Delete a Note    ****************
+    const deleteNote = async (id) => {
+        //  API Call
+        const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ3NDg2ZjIzODhmM2RhMGY1MGIzZDQ5In0sImlhdCI6MTY4NTM1ODQ4MX0.DpAd6fevtm5DYKtorIiu7AGxw0ZysCIvt_HRbDBKQu8"
+            }
+        });
+        const json = await response.json();
+        // Login to delete a note
+        console.log(json)
+        const newNote = notes.filter((note) => note._id !== id);
+        setNotes(newNote);
     }
 
     // Edit a Note
-    const editNote = () => {
+    const editNote = async (id, title, description, tag) => {
+        //  API Call
+        const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ3NDg2ZjIzODhmM2RhMGY1MGIzZDQ5In0sImlhdCI6MTY4NTM1ODQ4MX0.DpAd6fevtm5DYKtorIiu7AGxw0ZysCIvt_HRbDBKQu8"
+            },
+            body: JSON.stringify(title, description, tag)
+        });
+        const json = await response.json();
 
+        // Logic to edit in client
+        for (let index = 0; index < notes.length; index++) {
+            const element = notes[index];
+            if (element._id === id) {
+                element.title = title;
+                element.description = description;
+                element.tag = tag
+            }
+        }
     }
 
     return (
-        <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote }}>
+        <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote, fetchNotes }}>
             {props.children}
         </NoteContext.Provider>
     )

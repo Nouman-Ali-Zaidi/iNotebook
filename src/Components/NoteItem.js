@@ -7,7 +7,7 @@ const NoteItem = (props) => {
     const context = useContext(noteContext);
     const { deleteNote } = context;
     return (
-        <div className='col-lg-3 col-md-4 col-sm-6'>
+        <div className='col-lg-4 col-md-6 col-sm-6'>
             <div className="card my-3">
                 <div className="card-body ">
                     <div className="d-flex justify-content-between align-items-center">
